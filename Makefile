@@ -27,7 +27,7 @@ WINDOWS_ARCH_LIST = \
 	windows-386 \
 	windows-amd64
 
-all: darwin-arm64 # linux-amd64 darwin-amd64 
+all: darwin-arm64 # linux-amd64 darwin-amd64
 
 darwin-arm64:
 	GOARCH=arm64 GOOS=darwin $(GOBUILD) -o $(BINDIR)/$(NAME)-$@
@@ -100,20 +100,25 @@ releases: $(gz_releases) $(zip_releases)
 clean:
 	rm -f $(BINDIR)/*
 
-server-1: darwin-arm64
-	bin/pub-sub-darwin-arm64 -mode=server -server-addr=127.0.0.1:5001 -peer-addrs=127.0.0.1:5001,127.0.0.1:5002,127.0.0.1:5003
+# Linux
+DEV_ARCH=linux-amd64
+# Mac M1
+DEV_ARCH=darwin-arm64
 
-server-2: darwin-arm64
-	bin/pub-sub-darwin-arm64 -mode=server -server-addr=127.0.0.1:5002 -peer-addrs=127.0.0.1:5001,127.0.0.1:5002,127.0.0.1:5003
+server-1: $(DEV_ARCH)
+	bin/pub-sub-$(DEV_ARCH) -mode=server -server-addr=127.0.0.1:5000 -peer-addrs=127.0.0.1:5000,127.0.0.1:5002,127.0.0.1:5003
 
-server-3: darwin-arm64
-	bin/pub-sub-darwin-arm64 -mode=server -server-addr=127.0.0.1:5003 -peer-addrs=127.0.0.1:5001,127.0.0.1:5002,127.0.0.1:5003
+server-2: $(DEV_ARCH)
+	bin/pub-sub-$(DEV_ARCH) -mode=server -server-addr=127.0.0.1:5002 -peer-addrs=127.0.0.1:5000,127.0.0.1:5002,127.0.0.1:5003
 
-client-1: darwin-arm64
-	bin/pub-sub-darwin-arm64 -mode=client -server-addr=127.0.0.1:5001
+server-3: $(DEV_ARCH)
+	bin/pub-sub-$(DEV_ARCH) -mode=server -server-addr=127.0.0.1:5003 -peer-addrs=127.0.0.1:5000,127.0.0.1:5002,127.0.0.1:5003
 
-client-2: darwin-arm64
-	bin/pub-sub-darwin-arm64 -mode=client -server-addr=127.0.0.1:5002
+client-1: $(DEV_ARCH)
+	bin/pub-sub-$(DEV_ARCH) -mode=client -server-addr=127.0.0.1:5000
 
-client-3: darwin-arm64
-	bin/pub-sub-darwin-arm64 -mode=client -server-addr=127.0.0.1:5003
+client-2: $(DEV_ARCH)
+	bin/pub-sub-$(DEV_ARCH) -mode=client -server-addr=127.0.0.1:5002
+
+client-3: $(DEV_ARCH)
+	bin/pub-sub-$(DEV_ARCH) -mode=client -server-addr=127.0.0.1:5003
