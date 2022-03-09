@@ -102,8 +102,7 @@ clean:
 
 # Linux
 DEV_ARCH=linux-amd64
-# Mac M1
-DEV_ARCH=darwin-arm64
+
 
 server-1: $(DEV_ARCH)
 	bin/pub-sub-$(DEV_ARCH) -mode=server -server-addr=127.0.0.1:5000 -peer-addrs=127.0.0.1:5000,127.0.0.1:5002,127.0.0.1:5003
@@ -115,10 +114,10 @@ server-3: $(DEV_ARCH)
 	bin/pub-sub-$(DEV_ARCH) -mode=server -server-addr=127.0.0.1:5003 -peer-addrs=127.0.0.1:5000,127.0.0.1:5002,127.0.0.1:5003
 
 client-1: $(DEV_ARCH)
-	bin/pub-sub-$(DEV_ARCH) -mode=client -server-addr=127.0.0.1:5000
+	bin/pub-sub-$(DEV_ARCH) -mode=client -server-addr=127.0.0.1:5000 -peer-addrs=127.0.0.1:5000,127.0.0.1:5002,127.0.0.1:5003
 
 client-2: $(DEV_ARCH)
-	bin/pub-sub-$(DEV_ARCH) -mode=client -server-addr=127.0.0.1:5002
+	bin/pub-sub-$(DEV_ARCH) -mode=client -server-addr=127.0.0.1:5002 -peer-addrs=127.0.0.1:5000,127.0.0.1:5002,127.0.0.1:5003
 
 client-3: $(DEV_ARCH)
-	bin/pub-sub-$(DEV_ARCH) -mode=client -server-addr=127.0.0.1:5003
+	bin/pub-sub-$(DEV_ARCH) -mode=client -server-addr=127.0.0.1:5003 -peer-addrs=127.0.0.1:5000,127.0.0.1:5002,127.0.0.1:5003

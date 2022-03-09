@@ -11,11 +11,14 @@ import (
 	"github.com/ninomiyx/pub-sub/domain"
 )
 
-func Run(serverAddr string) {
+func Run(serverAddr string, peerAddrs []string) {
 	fmt.Println("client starts")
 	conn, err := net.Dial("tcp", serverAddr)
 	if err != nil {
-		panic(err)
+		fmt.Println("error receiving message from server")
+		peerAddrs = append(peerAddrs[1:], peerAddrs[0])
+		serverAddr = peerAddrs[0]
+		Run(serverAddr,peerAddrs)		
 	}
 
 	defer conn.Close()
@@ -29,8 +32,9 @@ func Run(serverAddr string) {
 			err = decoder.Decode(&msg)
 			if err != nil {
 				fmt.Println("error receiving message from server")
-				fmt.Println(err)
-				break
+				peerAddrs = append(peerAddrs[1:], peerAddrs[0])
+				serverAddr = peerAddrs[0]
+				Run(serverAddr,peerAddrs)		
 			}
 			fmt.Printf("%+v\n", msg)
 		}
@@ -42,8 +46,9 @@ func Run(serverAddr string) {
 	err = encoder.Encode(initMsg)
 	if err != nil {
 		fmt.Println("error receiving message from server")
-		fmt.Println(err)
-		return
+		peerAddrs = append(peerAddrs[1:], peerAddrs[0])
+		serverAddr = peerAddrs[0]
+		Run(serverAddr,peerAddrs)	
 	}
 
 	reader := bufio.NewReader(os.Stdin)
@@ -78,8 +83,9 @@ func Run(serverAddr string) {
 		err = encoder.Encode(&msg)
 		if err != nil {
 			fmt.Println("error sending message to server")
-			fmt.Println(err)
-			break
+			peerAddrs = append(peerAddrs[1:], peerAddrs[0])
+			serverAddr = peerAddrs[0]
+			Run(serverAddr,peerAddrs)	
 		}
 	}
 }

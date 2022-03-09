@@ -22,6 +22,6 @@ func main() {
 	case "server":
 		server.Run(*serverAddr, strings.Split(*peerAddrs, ","))
 	case "client":
-		client.Run(*serverAddr)
+		client.Run(*serverAddr, strings.Split(*peerAddrs, ","))
 	}
 }
